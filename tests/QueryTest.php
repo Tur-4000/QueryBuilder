@@ -75,5 +75,20 @@ class QueryTest extends TestCase
         $articlesSql4 = (new Query($this->pdo, 'articles'))->select(['name', 'body'])->whereNot('id', 1)->toSql();
         $this->assertEquals($expectedSql4, $articlesSql4);
         $this->assertEquals($expected4, $articles4);
+
+        $expectedSql5 = "SELECT `name`, `body` FROM `articles` WHERE `name` = 'title1' AND `body` != 'body2'";
+        $articlesSql5 = (new Query($this->pdo, 'articles'))
+                            ->select(['name', 'body'])
+                            ->where('name', 'title1')
+                            ->whereNot('body', 'body2')
+                            ->toSql();
+        $this->assertEquals($expectedSql5, $articlesSql5);
+        $expected5 = [['name' => 'title1', 'body' => 'body1']];
+        $articles5 = (new Query($this->pdo, 'articles'))
+                            ->select(['name', 'body'])
+                            ->where('name', 'title1')
+                            ->whereNot('body', 'body2')
+                            ->all();
+        $this->assertEquals($expected5, $articles5);
     }
 }
