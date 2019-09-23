@@ -6,7 +6,9 @@
     "keywords": ["query", "MySQL"],
     "minimum-stability": "dev",
     "scripts": {
-        "phpcs": "phpcs"
+        "phpcs": "phpcs",
+        "phpunit": "phpunit",
+        "test": "phpunit tests"
     },
     "authors": [
         {
