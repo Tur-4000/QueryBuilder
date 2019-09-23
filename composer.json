@@ -1,0 +1,13 @@
+{
+    "name": "tur-4000/query-builder",
+    "description": "PHP MySQL query builder",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Turbanov Valeriy",
+            "email": "tur.4000@gmail.com"
+        }
+    ],
+    "require": {}
+}
