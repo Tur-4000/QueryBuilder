@@ -3,12 +3,19 @@
     "description": "PHP MySQL query builder",
     "type": "library",
     "license": "MIT",
+    "keywords": ["query", "MySQL"],
+    "minimum-stability": "dev",
+    "scripts": {},
     "authors": [
         {
             "name": "Turbanov Valeriy",
             "email": "tur.4000@gmail.com",
+            "role":  "Maintainer"
+        },
+        {
             "name": "Kirill Mokevnin",
-            "email": "mokevnin@gmail.com"
+            "email": "mokevnin@gmail.com",
+            "role":  "Developer"
         }
     ],
     "autoload": {
