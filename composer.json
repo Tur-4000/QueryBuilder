@@ -1,15 +1,10 @@
 {
-    "name": "tur-4000/query-builder",
+    "name": "tur-4000/simple_query-builder",
     "description": "PHP MySQL query builder",
     "type": "library",
     "license": "MIT",
     "keywords": ["query", "MySQL"],
     "minimum-stability": "dev",
-    "scripts": {
-        "phpcs": "phpcs",
-        "phpunit": "phpunit",
-        "test": "phpunit tests"
-    },
     "authors": [
         {
             "name": "Valeriy Turbanov",
@@ -22,9 +17,14 @@
             "role":  "Developer"
         }
     ],
+    "scripts": {
+        "phpcs": "phpcs",
+        "phpunit": "phpunit",
+        "test": "phpunit tests"
+    },
     "autoload": {
         "psr-4": {
-            "QueryBuilder\\": "src"
+            "SimpleQueryBuilder\\": "src"
         }
     },
     "require": {},

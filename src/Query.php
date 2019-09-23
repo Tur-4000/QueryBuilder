@@ -1,6 +1,6 @@
 <?php
 
-namespace QueryBuilder;
+namespace SimpleQueryBuilder;
 
 class Query
 {
@@ -41,7 +41,9 @@ class Query
 
     public function select(array $arguments)
     {
-        $select = implode(', ', $arguments);
+        $select = implode(', ', array_map(function ($argument) {
+            return "`$argument`";
+        }, $arguments));
         return $this->getClone(['select' => $select]);
     }
 
@@ -67,6 +69,16 @@ class Query
     {
         $data = array_merge($this->data, ['limit' => $limit, 'offset' => $offset]);
         return $this->getClone($data);
+    }
+
+    /**
+     * @param array $fields array of field names
+     * @param array $values array of values
+     * @return Query
+     */
+    public function prepareData(array $fields, array $values)
+    {
+        return $this->getClone(['fields' => $fields, 'data' => $values]);
     }
 
     public function all()
@@ -115,27 +127,18 @@ class Query
         $stmt->execute($data);
     }
 
-//    TODO: разобраться с условием WHERE
     public function toSql()
     {
         $sqlParts = [];
-        $sqlParts[] = "SELECT {$this->data['select']} FROM {$this->table}";
+        $sqlParts[] = "SELECT {$this->data['select']} FROM `{$this->table}`";
         if ($this->data['where'] || $this->data['whereNot']) {
-            $whereParts[] = $this->buildWhere();
-            $whereParts[] = $this->buildWhereNot();
-            $where = implode('AND', $whereParts);
+            $where = $this->buildWhere();
             $sqlParts[] = "WHERE $where";
-//            if ($this->data['whereNot']) {
-//                $whereNot = $this->buildWhereNot();
-//                $sqlParts[] = "WHERE $where AND $whereNot";
-//            } else {
-//                $sqlParts[] = "WHERE $where";
-//            }
         }
         if ($this->data['orderBy']) {
             $field = $this->data['orderBy']['field'];
             $order = $this->data['orderBy']['order'];
-            $sqlParts[] = "ORDER BY $field $order";
+            $sqlParts[] = "ORDER BY `$field` $order";
         }
         if ($this->data['limit']) {
             $offset = $this->data['offset'];
@@ -191,14 +194,25 @@ class Query
         return implode(' ', $sqlParts);
     }
 
-    /**
-     * @param array $fields array of field names
-     * @param array $values array of values
-     * @return Query
-     */
-    public function prepareData(array $fields, array $values)
+    private function buildWhere()
     {
-        return $this->getClone(['fields' => $fields, 'data' => $values]);
+        $whereParts = [];
+
+        if ($this->data['where']) {
+            $whereParts[] = implode(' AND ', array_map(function ($key, $value) {
+                $quotedValue = $this->pdo->quote($value);
+                return "`$key` = $quotedValue";
+            }, array_keys($this->data['where']), $this->data['where']));
+        }
+
+        if ($this->data['whereNot']) {
+            $whereParts[] = implode(' AND ', array_map(function ($key, $value) {
+                $quotedValue = $this->pdo->quote($value);
+                return "`$key` != $quotedValue";
+            }, array_keys($this->data['whereNot']), $this->data['whereNot']));
+        }
+
+        return implode(' AND ', $whereParts);
     }
 
     private function buildSet()
@@ -209,22 +223,6 @@ class Query
         }, $this->data['fields']));
 
         return implode(' ', $parts);
-    }
-
-    private function buildWhere()
-    {
-        return implode(' AND ', array_map(function ($key, $value) {
-            $quotedValue = $this->pdo->quote($value);
-            return "$key = $quotedValue";
-        }, array_keys($this->data['where']), $this->data['where']));
-    }
-
-    private function buildWhereNot()
-    {
-        return implode(' AND ', array_map(function ($key, $value) {
-            $quotedValue = $this->pdo->quote($value);
-            return "$key != $quotedValue";
-        }, array_keys($this->data['whereNot']), $this->data['whereNot']));
     }
 
     private function getClone($data)
