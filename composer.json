@@ -5,10 +5,12 @@
     "license": "MIT",
     "keywords": ["query", "MySQL"],
     "minimum-stability": "dev",
-    "scripts": {},
+    "scripts": {
+        "phpcs": "phpcs"
+    },
     "authors": [
         {
-            "name": "Turbanov Valeriy",
+            "name": "Valeriy Turbanov",
             "email": "tur.4000@gmail.com",
             "role":  "Maintainer"
         },
@@ -23,5 +25,9 @@
             "QueryBuilder\\": "src"
         }
     },
-    "require": {}
+    "require": {},
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.0@dev",
+        "phpunit/phpunit": "^8.4@dev"
+    }
 }
