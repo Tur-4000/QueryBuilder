@@ -12,7 +12,6 @@ class QueryTest extends TestCase
     public function setUp(): void
     {
         $options = array(
-            \PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
             \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
             \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
         );
@@ -22,10 +21,10 @@ class QueryTest extends TestCase
                     `name` VARCHAR  NOT NULL,
                     `body` TEXT     NOT NULL
                 )";
-        $articles = "INSERT INTO `articles` (`name`, `body` )
-                     VALUES ('title1', 'body1'),
-                            ('title2', 'body2'),
-                            ('title3', 'body3')";
+        $articles = "INSERT INTO `articles` (`id`, `name`, `body`)
+                     VALUES (1, 'title1', 'body1'),
+                            (2, 'title2', 'body2'),
+                            (3, 'title3', 'body3')";
         $this->pdo = new \PDO("sqlite::memory:", '', '', $options);
         $this->pdo->exec($articleTbl);
         $this->pdo->exec($articles);
