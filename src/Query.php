@@ -15,7 +15,7 @@ class Query
         'data' => [],
     ];
 
-    public function __construct($pdo, $table, $data = null)
+    public function __construct(\PDO $pdo, string $table, $data = null)
     {
         $this->pdo = $pdo;
         $this->table = $table;
@@ -94,6 +94,7 @@ class Query
         return $this->pdo->exec($this->toSqlForDelete());
     }
 
+//    TODO: переделать для вставки нескольких строк
     public function preparedInsert(array $fields, array $data)
     {
         $valuesCount = count($fields);
@@ -196,12 +197,12 @@ class Query
 
     private function buildSet()
     {
-        $part[] = 'SET';
-        $part[] = implode(', ', array_map(function ($field) {
+        $parts[] = 'SET';
+        $parts[] = implode(', ', array_map(function ($field) {
             return "`$field`=?";
         }, $this->data['fields']));
 
-        return implode(' ', $part);
+        return implode(' ', $parts);
     }
 
     private function buildWhere()
