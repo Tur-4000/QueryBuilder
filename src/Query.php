@@ -115,6 +115,7 @@ class Query
         $stmt->execute($data);
     }
 
+//    TODO: разобраться с условием WHERE
     public function toSql()
     {
         $sqlParts = [];
