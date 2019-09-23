@@ -13,6 +13,8 @@ class Query
         'orderBy' => [],
         'fields' => [],
         'data' => [],
+        'limit' => 0,
+        'offset' => 0,
     ];
 
     public function __construct(\PDO $pdo, string $table, $data = null)
@@ -117,14 +119,17 @@ class Query
     {
         $sqlParts = [];
         $sqlParts[] = "SELECT {$this->data['select']} FROM {$this->table}";
-        if ($this->data['where']) {
-            $where = $this->buildWhere();
-            if ($this->data['whereNot']) {
-                $whereNot = $this->buildWhereNot();
-                $sqlParts[] = "WHERE $where AND $whereNot";
-            } else {
-                $sqlParts[] = "WHERE $where";
-            }
+        if ($this->data['where'] || $this->data['whereNot']) {
+            $whereParts[] = $this->buildWhere();
+            $whereParts[] = $this->buildWhereNot();
+            $where = implode('AND', $whereParts);
+            $sqlParts[] = "WHERE $where";
+//            if ($this->data['whereNot']) {
+//                $whereNot = $this->buildWhereNot();
+//                $sqlParts[] = "WHERE $where AND $whereNot";
+//            } else {
+//                $sqlParts[] = "WHERE $where";
+//            }
         }
         if ($this->data['orderBy']) {
             $field = $this->data['orderBy']['field'];
