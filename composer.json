@@ -6,8 +6,15 @@
     "authors": [
         {
             "name": "Turbanov Valeriy",
-            "email": "tur.4000@gmail.com"
+            "email": "tur.4000@gmail.com",
+            "name": "Kirill Mokevnin",
+            "email": "mokevnin@gmail.com"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "QueryBuilder\\": "src"
+        }
+    },
     "require": {}
 }
