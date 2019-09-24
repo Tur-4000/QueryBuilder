@@ -10,10 +10,11 @@ class Query
         'select' => "*",
         'where' => [],
         'whereNot' => [],
+        'like' => [],
         'orderBy' => [],
         'fields' => [],
         'data' => [],
-        'limit' => 0,
+        'limit' => null,
         'offset' => 0,
     ];
 
@@ -56,6 +57,12 @@ class Query
     public function whereNot($key, $value)
     {
         $data = ['whereNot' => array_merge($this->data['whereNot'], [$key => $value])];
+        return $this->getClone($data);
+    }
+
+    public function like($key, $value)
+    {
+        $data = ['like' => array_merge($this->data['like'], [$key => $value])];
         return $this->getClone($data);
     }
 
@@ -131,7 +138,7 @@ class Query
     {
         $sqlParts = [];
         $sqlParts[] = "SELECT {$this->data['select']} FROM `{$this->table}`";
-        if ($this->data['where'] || $this->data['whereNot']) {
+        if ($this->data['where'] || $this->data['whereNot'] || $this->data['like']) {
             $where = $this->buildWhere();
             $sqlParts[] = "WHERE $where";
         }
@@ -210,6 +217,13 @@ class Query
                 $quotedValue = $this->pdo->quote($value);
                 return "`$key` != $quotedValue";
             }, array_keys($this->data['whereNot']), $this->data['whereNot']));
+        }
+
+        if (!empty($this->data['like'])) {
+            $whereParts[] = implode(' AND ', array_map(function ($key, $value) {
+                $quotedValue = $this->pdo->quote($value);
+                return "`$key` LIKE $quotedValue";
+            }, array_keys($this->data['like']), $this->data['like']));
         }
 
         return implode(' AND ', $whereParts);
