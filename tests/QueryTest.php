@@ -111,5 +111,10 @@ class QueryTest extends TestCase
                             ->like('body', 'body%')
                             ->all();
         $this->assertEquals($expected6, $articles6);
+
+//      Test count()
+        $expected7 = 3; // "SELECT COUNT(*) FROM `articles`";
+        $articles7 = (new Query($this->pdo, 'articles'))->count();
+        $this->assertEquals($expected7, $articles7);
     }
 }
