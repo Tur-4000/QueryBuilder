@@ -43,7 +43,8 @@ class Query
     public function select(array $arguments)
     {
         $select = implode(', ', array_map(function ($argument) {
-            return "`$argument`";
+//            TODO: убрать костыль
+            return ($argument === 'COUNT(*)') ? $argument : "`$argument`";
         }, $arguments));
         return $this->getClone(['select' => $select]);
     }
