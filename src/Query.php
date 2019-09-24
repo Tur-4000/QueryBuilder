@@ -207,27 +207,26 @@ class Query
         $whereParts = [];
 
         if ($this->data['where']) {
-            $whereParts[] = implode(' AND ', array_map(function ($key, $value) {
-                $quotedValue = $this->pdo->quote($value);
-                return "`$key` = $quotedValue";
-            }, array_keys($this->data['where']), $this->data['where']));
+            $whereParts[] = $this->makeWherePart($this->data['where'], '=');
         }
 
         if ($this->data['whereNot']) {
-            $whereParts[] = implode(' AND ', array_map(function ($key, $value) {
-                $quotedValue = $this->pdo->quote($value);
-                return "`$key` != $quotedValue";
-            }, array_keys($this->data['whereNot']), $this->data['whereNot']));
+            $whereParts[] = $this->makeWherePart($this->data['whereNot'], '!=');
         }
 
         if (!empty($this->data['like'])) {
-            $whereParts[] = implode(' AND ', array_map(function ($key, $value) {
-                $quotedValue = $this->pdo->quote($value);
-                return "`$key` LIKE $quotedValue";
-            }, array_keys($this->data['like']), $this->data['like']));
+            $whereParts[] = $this->makeWherePart($this->data['like'], 'LIKE');
         }
 
         return implode(' AND ', $whereParts);
+    }
+
+    private function makeWherePart($wherePart, $operator)
+    {
+        return implode(' AND ', array_map(function ($key, $value) use ($operator) {
+            $quotedValue = $this->pdo->quote($value);
+            return "`$key` $operator $quotedValue";
+        }, array_keys($wherePart), $wherePart));
     }
 
     private function buildSet()
