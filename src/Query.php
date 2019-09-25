@@ -184,7 +184,15 @@ class Query
         $sqlParts[] = "INSERT INTO `{$this->table}`";
 
         if ($this->data['fields']) {
-            $sqlParts[] = $this->buildSet();
+            $sqlParts[] = "(" . implode(',', array_map(function ($field) {
+                return "`$field`";
+            }, $this->data['fields'])) . ")";
+
+            $sqlParts[] = "VALUES";
+
+            $sqlParts[] = "(" . implode(',', array_map(function () {
+                return "?";
+            }, $this->data['fields'])). ")";
         }
 
         return implode(' ', $sqlParts);
