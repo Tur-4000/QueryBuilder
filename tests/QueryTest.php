@@ -154,7 +154,7 @@ class QueryTest extends TestCase
             ->where('id', 3)
             ->toSqlForDelete();
         $this->assertEquals($expectedSql1, $articlesSql1);
-        $expected1 =null;
+        $expected1 = null;
         (new Query($this->pdo, 'articles'))->where('id', 2)->delete();
         $articles1 = (new Query($this->pdo, 'articles'))->where('id', 2)->fetch();
         $this->assertEquals($expected1, $articles1);
