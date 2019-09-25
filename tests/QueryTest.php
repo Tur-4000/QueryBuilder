@@ -146,4 +146,17 @@ class QueryTest extends TestCase
         $articles1 = (new Query($this->pdo, 'articles'))->select(['name', 'body'])->where('id', 1)->fetch();
         $this->assertEquals($expected1, $articles1);
     }
+
+    public function testDelete()
+    {
+        $expectedSql1 = "DELETE FROM `articles` WHERE `id` = '3'";
+        $articlesSql1 = (new Query($this->pdo, 'articles'))
+            ->where('id', 3)
+            ->toSqlForDelete();
+        $this->assertEquals($expectedSql1, $articlesSql1);
+        $expected1 =null;
+        (new Query($this->pdo, 'articles'))->where('id', 2)->delete();
+        $articles1 = (new Query($this->pdo, 'articles'))->where('id', 2)->fetch();
+        $this->assertEquals($expected1, $articles1);
+    }
 }

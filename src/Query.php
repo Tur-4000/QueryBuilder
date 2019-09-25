@@ -201,7 +201,7 @@ class Query
     public function toSqlForDelete()
     {
         $sqlParts = [];
-        $sqlParts[] = "DELETE FROM {$this->table}";
+        $sqlParts[] = "DELETE FROM `{$this->table}`";
         if ($this->data['where']) {
             $where = $this->buildWhere();
             $sqlParts[] = "WHERE $where";
