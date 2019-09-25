@@ -121,7 +121,9 @@ class QueryTest extends TestCase
     public function testInsert()
     {
         $expectedSql1 = "INSERT INTO `articles` (`name`,`body`) VALUES (?,?)";
-        $articlesSql1 = (new Query($this->pdo, 'articles'))->prepareData(['name', 'body'], ['title4', 'body4'])->toSqlForInsert();
+        $articlesSql1 = (new Query($this->pdo, 'articles'))
+            ->prepareData(['name', 'body'], ['title4', 'body4'])
+            ->toSqlForInsert();
         $expected1 = ['name' => 'title4', 'body' => 'body4'];
         $this->assertEquals($expectedSql1, $articlesSql1);
         (new Query($this->pdo, 'articles'))->prepareData(['name', 'body'], ['title4', 'body4'])->insert();
@@ -132,10 +134,15 @@ class QueryTest extends TestCase
     public function testUpdate()
     {
         $expectedSql1 = "UPDATE `articles` SET `name`=?, `body`=?";
-        $articlesSql1 = (new Query($this->pdo, 'articles'))->prepareData(['name', 'body'], ['title11', 'body11'])->toSqlForUpdate();
+        $articlesSql1 = (new Query($this->pdo, 'articles'))
+            ->prepareData(['name', 'body'], ['title11', 'body11'])
+            ->toSqlForUpdate();
         $this->assertEquals($expectedSql1, $articlesSql1);
         $expected1 = ['name' => 'title11', 'body' => 'body11'];
-        (new Query($this->pdo, 'articles'))->prepareData(['name', 'body'], ['title11', 'body11'])->where('id', 1)->update();
+        (new Query($this->pdo, 'articles'))
+            ->prepareData(['name', 'body'], ['title11', 'body11'])
+            ->where('id', 1)
+            ->update();
         $articles1 = (new Query($this->pdo, 'articles'))->select(['name', 'body'])->where('id', 1)->fetch();
         $this->assertEquals($expected1, $articles1);
     }

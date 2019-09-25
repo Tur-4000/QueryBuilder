@@ -192,7 +192,7 @@ class Query
 
             $sqlParts[] = "(" . implode(',', array_map(function () {
                 return "?";
-            }, $this->data['fields'])). ")";
+            }, $this->data['fields'])) . ")";
         }
 
         return implode(' ', $sqlParts);
